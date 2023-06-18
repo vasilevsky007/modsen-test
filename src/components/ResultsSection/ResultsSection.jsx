@@ -1,5 +1,6 @@
 import { Col, Container, Row } from "react-bootstrap";
-import { BookCard } from "./BookCard";
+
+import { BookCard } from "../BookCard/BookCard";
 
 
 export const ResultsSection = ({ appState }) => {
@@ -24,16 +25,16 @@ export const ResultsSection = ({ appState }) => {
     <section className="App-search-results">
       <Container>
         <Row>
-          <Col xs={6} sm={3}>
+          <Col className='mb-3' xs={6} sm={3}>
             <BookCard isLoaded={false}/>
           </Col>
-          <Col xs={6} sm={3}>
+          <Col className='mb-3' xs={6} sm={3}>
             <BookCard isLoaded={false}/>
           </Col>
-          <Col xs={6} sm={3}>
+          <Col className='mb-3' xs={6} sm={3}>
             <BookCard isLoaded={true}/>
           </Col>
-          <Col xs={6} sm={3}>
+          <Col className='mb-3' xs={6} sm={3}>
             <BookCard isLoaded={true}/>
           </Col>
 

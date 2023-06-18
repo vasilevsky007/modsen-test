@@ -1,8 +1,11 @@
-import backgroundBooksImage from "../books_background.jpg";
-
 import {useState} from "react";
 
 import {Button, Col, Container, Form, InputGroup, Row} from "react-bootstrap";
+
+import './styles.css'
+import backgroundBooksImage from "../../assets/books_background.jpg";
+
+
 
 export const Header = ({ setAppState }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -77,7 +80,7 @@ export const Header = ({ setAppState }) => {
 
       {/*<img src={logo} className="App-logo" alt="logo" />*/}
       {/*<p>*/}
-      {/*  Edit <code>src/App.js</code> and save to reload.*/}
+      {/*  Edit <code>src/App.jsx</code> and save to reload.*/}
       {/*</p>*/}
       {/*<Button>asdf123sfhsh</Button>*/}
       {/*<a*/}

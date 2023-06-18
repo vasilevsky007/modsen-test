@@ -1,7 +1,8 @@
 import { Card, Container, Placeholder, Ratio, Row, Spinner } from "react-bootstrap";
-import bookPhoto from './book.png';
 import {useState} from "react";
-import {BookDetailed} from "./BookDetailed";
+
+import bookPhoto from '../../assets/book.png';
+import {BookDetailed} from "../BookDetailed/BookDetailed";
 
 export function BookCard({isLoaded}) {
   const [isShowingDetailed, setIsShowingDetailed] = useState(false);

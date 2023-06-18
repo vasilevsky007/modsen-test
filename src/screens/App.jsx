@@ -1,12 +1,10 @@
-import './App.css';
-
 import { useState } from 'react';
 
 import 'bootstrap/dist/css/bootstrap.css';
 
-import { Header } from "./modules/Header";
-import { ProgressSection } from "./modules/ProgressSection";
-import { ResultsSection } from "./modules/ResultsSection";
+import { Header } from "../components/Header/Header";
+import { ProgressSection } from "../components/ProgressSection/ProgressSection";
+import { ResultsSection } from "../components/ResultsSection/ResultsSection";
 
 const App = () => {
   const [appState, setAppState] = useState('initial');
