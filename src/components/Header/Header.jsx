@@ -48,7 +48,7 @@ export const Header = ({ setAppState }) => {
           </Row>
           <Row>
             <Col xs="12" sm="auto">
-              <Form.Label className="header-text">Categories</Form.Label>
+              <Form.Label className="header-text selector-label">Categories</Form.Label>
             </Col>
             <Col>
               <Form.Select onChange={event => setCategory(event.target.value)} >
@@ -62,11 +62,11 @@ export const Header = ({ setAppState }) => {
               </Form.Select>
             </Col>
             <Col xs="12" sm="auto">
-              <Form.Label className="header-text">Sorting by</Form.Label>
+              <Form.Label className="header-text selector-label">Sorting by</Form.Label>
             </Col>
             <Col>
               <Form.Select onChange={event => setSorting(event.target.value)} >
-                <option value="Relevance">Relevance</option>
+                <option value="relevance">Relevance</option>
                 <option value="newest">Newest</option>
               </Form.Select>
             </Col>
