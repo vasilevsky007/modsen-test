@@ -6,7 +6,6 @@ import './styles.css'
 import backgroundBooksImage from "../../assets/books_background.jpg";
 
 
-
 export const Header = ({ setAppState }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [category, setCategory] = useState('');
@@ -22,7 +21,7 @@ export const Header = ({ setAppState }) => {
   }
 
   return (
-    <header className="App-header pb-3" style={{
+    <header className="pb-3" style={{
       backgroundImage: `url(${backgroundBooksImage})`,
       backgroundRepeat: 'no-repeat',
       backgroundSize: 'cover'
@@ -30,27 +29,26 @@ export const Header = ({ setAppState }) => {
       <Container>
         <Row>
           <Col>
-            <h1 className="App-header-text mt-5 mb-5">Search for books</h1>
+            <h1 className="header-text mt-5 mb-5">Search for books</h1>
           </Col>
         </Row>
-        <Form className="App-search-form" onSubmit={searchForBooks}>
+        <Form className="search-form" onSubmit={searchForBooks}>
           <Row>
             <Col>
               <InputGroup className="mb-3">
                 <Form.Control
-                  size="lg"
                   placeholder="Enter the book name"
                   aria-label="Enter the book name"
                   aria-describedby="basic-addon2"
                   onChange={event => setSearchQuery(event.target.value)}
                 />
-                <Button as="input" type="submit" value="Search" variant="outline-secondary" id="button-addon2" size="lg"/>
+                <Button as="input" type="submit" value="Search" variant="outline-light" id="button-addon2" size="lg"/>
               </InputGroup>
             </Col>
           </Row>
           <Row>
-            <Col xs="auto">
-              <Form.Label>Categories</Form.Label>
+            <Col xs="12" sm="auto">
+              <Form.Label className="header-text">Categories</Form.Label>
             </Col>
             <Col>
               <Form.Select onChange={event => setCategory(event.target.value)} >
@@ -63,8 +61,8 @@ export const Header = ({ setAppState }) => {
                 <option value="poetry">Poetry</option>
               </Form.Select>
             </Col>
-            <Col xs="auto">
-              <Form.Label>Sorting by</Form.Label>
+            <Col xs="12" sm="auto">
+              <Form.Label className="header-text">Sorting by</Form.Label>
             </Col>
             <Col>
               <Form.Select onChange={event => setSorting(event.target.value)} >
