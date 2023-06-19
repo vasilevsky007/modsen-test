@@ -1,10 +1,9 @@
 import { Card, Container, Placeholder, Ratio, Row, Spinner } from "react-bootstrap";
-import {useState} from "react";
+import { useState } from "react";
 
-import bookPhoto from '../../assets/book.png';
 import {BookDetailed} from "../BookDetailed/BookDetailed";
 
-export function BookCard({isLoaded}) {
+export function BookCard({isLoaded, thisBook}) {
   const [isShowingDetailed, setIsShowingDetailed] = useState(false);
   const showDetailed = () => {
     setIsShowingDetailed(true);
@@ -14,11 +13,15 @@ export function BookCard({isLoaded}) {
       {/*TODO: Add dynamic width*/}
       {isLoaded ? (
         <Card style={{ width: '94%' }} onClick={showDetailed}>
-          <Card.Img variant="top" src={bookPhoto}/>
+          <Card.Img variant="top" src={thisBook.photo}/>
           <Card.Body>
-            <Card.Link href="#" className="text-muted">Book Category</Card.Link>
-            <Card.Title>Book Title</Card.Title>
-            <Card.Subtitle className="mb-2 text-muted">Book Author</Card.Subtitle>
+            <Card.Link href="#" className="text-muted">{thisBook.categories[0]}</Card.Link>
+            <Card.Title>{thisBook.bookName}</Card.Title>
+            {
+              thisBook.authors.map(author =>
+                <Card.Subtitle className="mb-2 text-muted">{author}</Card.Subtitle>
+              )
+            }
           </Card.Body>
         </Card>
       ) : (
@@ -44,15 +47,11 @@ export function BookCard({isLoaded}) {
           </Card.Body>
         </Card>
       )}
+
       <BookDetailed
         isShown={isShowingDetailed}
         setShown={setIsShowingDetailed}
-        bookPhoto={bookPhoto}
-        name={'BookName'}
-        categories={['category 1', 'category 2']}
-        authors={['author 1', "author 2"]}
-        description={'Sagkfj  aihjdf o aioudfhoaiufdsha ioauhdfsvoiuahsouiah aiuodfhoiau ujfhaaidsofhvu aiuhodfsvaf iuydsghffghg uyoidfo uiyGDHBO oiUDH iudhc IDUH Duios u \nHUH FOI HFIOI FHUHfuFYGU IDOSFYGVOIvugviovUV GSviuosv ygVSIOUYGsgiyusV'}
-
+        book={thisBook}
       />
     </>
   );

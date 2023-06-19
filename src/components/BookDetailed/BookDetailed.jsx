@@ -1,21 +1,6 @@
 import {Card, Col, Container, Image, Modal, Row} from "react-bootstrap";
 
-export const BookDetailed = ({isShown, setShown, categories, name, authors, description, bookPhoto }) => {
-  const drawCategories = (categories) => {
-    let result = [];
-    for (const category of categories) {
-      result.push(<Card.Link href="#" className="text-muted">{category + ' '}</Card.Link>);
-    }
-    return result;
-  }
-  const drawAuthors = (authors) => {
-    let result = [];
-    for (const author of authors) {
-      result.push(<Card.Subtitle className="mb-2 text-muted">{author}</Card.Subtitle>)
-    }
-    return result;
-  }
-
+export const BookDetailed = ({isShown, setShown, book}) => {
   return (
     <Modal
       show={isShown}
@@ -29,15 +14,23 @@ export const BookDetailed = ({isShown, setShown, categories, name, authors, desc
         <Container>
           <Row>
             <Col xs = {12} sm = {6}>
-              <Image src={bookPhoto} fluid/>
+              <Image src={book?.photo} fluid/>
             </Col>
             <Col xs = {12} sm = {6}>
-              {drawCategories(categories)}
-              <Card.Title>{name}</Card.Title>
-              {drawAuthors(authors)}
+              {
+                book?.categories.map( category =>
+                  <Card.Link href="#" className="ml-1 text-muted">{category}</Card.Link>
+                )
+              }
+              <Card.Title>{book?.bookName}</Card.Title>
+              {
+                book?.authors.map( author =>
+                  <Card.Subtitle className="mb-2 text-muted">{author}</Card.Subtitle>
+                )
+              }
               <Card>
                 <Card.Body>
-                  {description}
+                  {book?.bookDescription}
                 </Card.Body>
               </Card>
             </Col>
