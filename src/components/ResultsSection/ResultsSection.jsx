@@ -40,8 +40,8 @@ export const ResultsSection = ({ appState }) => {
           <Container>
             <Row>
               {
-                booksShowing.map( () =>
-                  <Col className='mb-3' xs={6} sm={4} lg={3}>
+                booksShowing.map( (value, index) =>
+                  <Col className='mb-3' xs={6} sm={4} lg={3} key={ "loading_book_" + index }>
                     <BookCard isLoaded={false}/>
                   </Col>
                 )
@@ -61,8 +61,8 @@ export const ResultsSection = ({ appState }) => {
           <Container>
             <Row>
               {
-                booksShowing.map( (thisCardBook) =>
-                  <Col className='mb-3' xs={6} sm={4} lg={3}>
+                booksShowing.map( (thisCardBook, index) =>
+                  <Col className='mb-3' xs={6} sm={4} lg={3} key={ "loaded_book_"+index }>
                     <BookCard isLoaded={true} thisBook={thisCardBook}/>
                   </Col>
                 )

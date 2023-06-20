@@ -53,7 +53,10 @@ export const Header = ({ setAppState }) => {
               <Form.Select onChange={event => setCategory(event.target.value)} >
                 {
                   ["All", "Art", "Biography", "Computers", "History", "Medical", "Poetry"].map(
-                    category => <option value={ category.toLowerCase() }>{ category }</option>
+                    category =>
+                      <option value={category.toLowerCase()} key={ category.toLowerCase() + '_category' }>
+                        { category }
+                      </option>
                   )
                 }
               </Form.Select>
@@ -65,7 +68,10 @@ export const Header = ({ setAppState }) => {
               <Form.Select onChange={event => setSorting(event.target.value)} >
                 {
                   ["Relevance", "Newest"].map(
-                    sorting => <option value={ sorting.toLowerCase() }>{ sorting }</option>
+                    sorting =>
+                      <option value={ sorting.toLowerCase() } key={ sorting.toLowerCase() + '_sorting' }>
+                        { sorting }
+                      </option>
                   )
                 }
               </Form.Select>

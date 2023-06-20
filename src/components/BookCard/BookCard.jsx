@@ -19,7 +19,7 @@ export function BookCard({isLoaded, thisBook}) {
               <Card.Title>{thisBook.bookName}</Card.Title>
               {
                 thisBook.authors.map(author =>
-                  <Card.Subtitle className="mb-2 text-muted">{author}</Card.Subtitle>
+                  <Card.Subtitle className="mb-2 text-muted" key={author}>{author}</Card.Subtitle>
                 )
               }
             </Card.Body>
