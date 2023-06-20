@@ -82,21 +82,24 @@ export const ResultsSection = ({ appState }) => {
                 )
               }
             </Row>
-            <Row>
-              <Col className="d-flex justify-content-center">
-                <Button
-                  variant="outline-secondary"
-                  disabled={isLoadingMore}
-                  onClick={!isLoadingMore ? loadMore : null}
-                  className="mb-3">
-                  {
-                    !isLoadingMore ? 'Load more' :
-                      <>Loading <Spinner variant="secondary" size="sm"/></>
-                  }
-
-                </Button>
-              </Col>
-            </Row>
+            {
+              numberOfCardsShown < +appState ?
+                <Row>
+                  <Col className="d-flex justify-content-center">
+                    <Button
+                      variant="outline-secondary"
+                      disabled={isLoadingMore}
+                      onClick={!isLoadingMore ? loadMore : null}
+                      className="mb-3">
+                      {
+                        !isLoadingMore ? 'Load more' :
+                          <>Loading <Spinner variant="secondary" size="sm"/></>
+                      }
+                    </Button>
+                  </Col>
+                </Row> :
+                <></>
+            }
           </Container>
 
         </section>
