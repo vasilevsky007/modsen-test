@@ -12,7 +12,12 @@ const App = () => {
     <div className="App">
       <Header setAppState={setAppState}/>
       <ProgressSection appState={appState}/>
-      <ResultsSection/>
+      {
+        appState === 'loading' ? //to reset state
+          <ResultsSection appState={appState}/> :
+          <><ResultsSection appState={appState}/></>
+      }
+
     </div>
   );
 

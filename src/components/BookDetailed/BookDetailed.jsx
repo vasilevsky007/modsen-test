@@ -1,4 +1,4 @@
-import {Card, Col, Container, Image, Modal, Row} from "react-bootstrap";
+import { Button, Card, Col, Container, Image, Modal, Row } from "react-bootstrap";
 
 export const BookDetailed = ({isShown, setShown, book}) => {
   return (
@@ -19,7 +19,7 @@ export const BookDetailed = ({isShown, setShown, book}) => {
             <Col xs = {12} sm = {6}>
               {
                 book?.categories.map( category =>
-                  <Card.Link href="#" className="ml-1 text-muted">{category}</Card.Link>
+                  <Button variant="link"  href="#" className="text-muted">{category}</Button>
                 )
               }
               <Card.Title>{book?.bookName}</Card.Title>
