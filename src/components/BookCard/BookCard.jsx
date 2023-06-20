@@ -1,4 +1,4 @@
-import { Card, Container, Placeholder, Ratio, Row, Spinner } from "react-bootstrap";
+import { Card, Container, Placeholder, Ratio, Spinner } from "react-bootstrap";
 import { useState } from "react";
 
 import {BookDetailed} from "../BookDetailed/BookDetailed";

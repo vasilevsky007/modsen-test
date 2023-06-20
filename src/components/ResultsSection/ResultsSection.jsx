@@ -1,15 +1,16 @@
-import { Col, Container, Row } from "react-bootstrap";
+import {Button, Col, Container, Row, Spinner} from "react-bootstrap";
 
 import { BookCard } from "../BookCard/BookCard";
 
 import { BookFactory } from "../../services/Book/Book";
-import {useState} from "react";
+import { useState } from "react";
 
 
 export const ResultsSection = ({ appState }) => {
   let content;
   let bookFactory = new BookFactory();
   let initialNumberOfCards;
+  let booksShowing = [];
   switch (appState) {
     case 'initial':
       initialNumberOfCards = 0;
@@ -21,8 +22,21 @@ export const ResultsSection = ({ appState }) => {
       initialNumberOfCards = +appState < 30 ? appState : 30;
       break;
   }
+
   const [numberOfCardsShown, setNumberOfCardsShown] = useState(initialNumberOfCards);
-  let booksShowing = [];
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+
+  const loadMore = () =>{
+    const numberOfBooksGoingToLoad = +appState - numberOfCardsShown < 30 ? +appState - numberOfCardsShown : 30;
+    console.log('loading ' + numberOfBooksGoingToLoad + ' more books from index ' + numberOfCardsShown );
+    setIsLoadingMore(true);
+    new Promise(resolve => setTimeout(resolve, 1000)).then(() => {
+      booksShowing.push(bookFactory.create("placeholder", +appState))
+      setNumberOfCardsShown(numberOfCardsShown + numberOfBooksGoingToLoad);
+      setIsLoadingMore(false);
+    } );
+  }
+
   switch (appState) {
     case 'initial':
       content = (
@@ -68,7 +82,23 @@ export const ResultsSection = ({ appState }) => {
                 )
               }
             </Row>
+            <Row>
+              <Col className="d-flex justify-content-center">
+                <Button
+                  variant="outline-secondary"
+                  disabled={isLoadingMore}
+                  onClick={!isLoadingMore ? loadMore : null}
+                  className="mb-3">
+                  {
+                    !isLoadingMore ? 'Load more' :
+                      <>Loading <Spinner variant="secondary" size="sm"/></>
+                  }
+
+                </Button>
+              </Col>
+            </Row>
           </Container>
+
         </section>
       )
       break;

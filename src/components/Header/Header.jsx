@@ -41,7 +41,7 @@ export const Header = ({ setAppState }) => {
                   aria-label="Enter the book name"
                   onChange={ event => setEnteredSearchQuery(event.target.value) }
                 />
-                <Button as="input" type="submit" value="Search" variant="outline-light"size="lg"/>
+                <Button as="input" type="submit" value="Search" variant="outline-light" size="lg"/>
               </InputGroup>
             </Col>
           </Row>
