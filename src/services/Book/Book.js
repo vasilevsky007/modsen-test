@@ -1,7 +1,8 @@
 import bookImage from '../../assets/book.png'
 
 class PlaceholderBook {
-  constructor() {
+  constructor(data) {
+    console.log("placeholder book constructor working with data: ", data);
     this.photo = bookImage;
     this.bookName = 'BookName';
     this.categories = ['category 1', 'category 2'];
@@ -10,8 +11,9 @@ class PlaceholderBook {
   }
 }
 class GoogleBook {
-  constructor(info) {
+  constructor(data) {
     //TODO: implement constructor for googlebooks api
+    console.log("google book constructor working with data: ", data);
   }
 }
 export class BookFactory {
@@ -22,9 +24,9 @@ export class BookFactory {
 
   numberOfBooksCreated = 0
 
-  create(type, numberOfBooksFound, ...info) {
+  create(type, numberOfBooksInData, ...data) {
     const Book = BookFactory.bookTypes[type] || BookFactory.bookTypes.placeholder;
     this.numberOfBooksCreated++;
-    return this.numberOfBooksCreated <= numberOfBooksFound ? new Book(info) : undefined;
+    return this.numberOfBooksCreated <= numberOfBooksInData ? new Book(data) : undefined;
   }
 }

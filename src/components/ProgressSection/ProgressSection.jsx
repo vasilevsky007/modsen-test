@@ -4,7 +4,7 @@ import './styles.css'
 
 export const ProgressSection = ({ appState }) => {
   let content;
-  switch (appState) {
+  switch (appState.state) {
     case 'initial':
       content =
         <section className="App-ProgressSection m-2">
@@ -26,7 +26,7 @@ export const ProgressSection = ({ appState }) => {
         <section className="App-ProgressSection m-2">
           <Container>
             <Alert variant="success">
-              Found {appState} results
+              Found {appState.state} results
             </Alert>
           </Container>
         </section>;

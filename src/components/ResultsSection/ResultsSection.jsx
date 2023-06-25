@@ -3,41 +3,42 @@ import {Button, Col, Container, Row, Spinner} from "react-bootstrap";
 import { BookCard } from "../BookCard/BookCard";
 
 import { BookFactory } from "../../services/Book/Book";
-import { useState } from "react";
+import {useState} from "react";
+import {PAGINATION_STEP} from "../../utils/constants/constants";
+import {BookStorage} from "../../services/BookStorage/BookStorage";
 
 
-export const ResultsSection = ({ appState }) => {
+export const ResultsSection = ({ appState, setAppState, requestFactory}) => {
   let content;
   let bookFactory = new BookFactory();
-  let initialNumberOfCards;
-  let booksShowing = [];
-  switch (appState) {
-    case 'initial':
-      initialNumberOfCards = 0;
-      break;
-    case 'loading':
-      initialNumberOfCards = 30;
-      break;
-    default:
-      initialNumberOfCards = +appState < 30 ? appState : 30;
-      break;
-  }
 
-  const [numberOfCardsShown, setNumberOfCardsShown] = useState(initialNumberOfCards);
+
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   const loadMore = () =>{
-    const numberOfBooksGoingToLoad = +appState - numberOfCardsShown < 30 ? +appState - numberOfCardsShown : 30;
-    console.log('loading ' + numberOfBooksGoingToLoad + ' more books from index ' + numberOfCardsShown );
     setIsLoadingMore(true);
-    new Promise(resolve => setTimeout(resolve, 1000)).then(() => {
-      booksShowing.push(bookFactory.create("placeholder", +appState))
-      setNumberOfCardsShown(numberOfCardsShown + numberOfBooksGoingToLoad);
-      setIsLoadingMore(false);
-    } );
+    requestFactory.getLast()
+      .paginationRequest()
+      .then(
+        (result) => {
+          setAppState({ 
+            state: appState.state, 
+            bookData: result.bookData,
+            numberOfBooksDisplayed: appState.numberOfBooksDisplayed + result.numberOfBooksLoaded
+          });
+        },
+        (error) => {
+          //TODO: display error message in UI
+          console.log(error);
+          setAppState({ state: "initial" })
+        }
+      )
+      .finally(
+        () => setIsLoadingMore(false)
+      )
   }
 
-  switch (appState) {
+  switch (appState.state) {
     case 'initial':
       content = (
         <section className="App-search-results">
@@ -45,16 +46,16 @@ export const ResultsSection = ({ appState }) => {
       );
       break;
     case 'loading':
-      while ( typeof booksShowing.pop() !== 'undefined') {  }
-      for (let i = 0; i < numberOfCardsShown; i++) {
-        booksShowing.push("");
+      BookStorage.clear();
+      for (let i = 0; i < appState.numberOfBooksDisplayed; i++) {
+        BookStorage.push("");
       }
       content = (
         <section className="App-search-results">
           <Container>
             <Row>
               {
-                booksShowing.map( (value, index) =>
+                BookStorage.books.map( (value, index) =>
                   <Col className='mb-3' xs={6} sm={4} lg={3} key={ "loading_book_" + index }>
                     <BookCard isLoaded={false}/>
                   </Col>
@@ -66,16 +67,19 @@ export const ResultsSection = ({ appState }) => {
       );
       break;
     default:
-      while ( typeof booksShowing.pop() !== 'undefined') {  }
-      for (let i = 0; i < numberOfCardsShown; i++) {
-        booksShowing.push(bookFactory.create("placeholder", +appState));
+      if (!isLoadingMore)  {
+        console.log("adding new", appState.numberOfBooksDisplayed - PAGINATION_STEP, appState.numberOfBooksDisplayed);
+        for (let i = appState.numberOfBooksDisplayed - PAGINATION_STEP; i < appState.numberOfBooksDisplayed; i++) {
+          BookStorage.push(bookFactory.create("placeholder", +appState.state, appState.bookData));
+        }
       }
+      console.log("BookStorage: ", BookStorage.books);
       content = (
         <section className="App-search-results">
           <Container>
             <Row>
               {
-                booksShowing.map( (thisCardBook, index) =>
+                BookStorage.books.map( (thisCardBook, index) =>
                   <Col className='mb-3' xs={6} sm={4} lg={3} key={ "loaded_book_"+index }>
                     <BookCard isLoaded={true} thisBook={thisCardBook}/>
                   </Col>
@@ -83,7 +87,7 @@ export const ResultsSection = ({ appState }) => {
               }
             </Row>
             {
-              numberOfCardsShown < +appState ?
+              appState.numberOfBooksDisplayed < +appState.state ?
                 <Row>
                   <Col className="d-flex justify-content-center">
                     <Button

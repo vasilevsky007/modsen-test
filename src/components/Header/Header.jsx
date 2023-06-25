@@ -4,20 +4,35 @@ import {Button, Col, Container, Form, InputGroup, Row} from "react-bootstrap";
 
 import './styles.css'
 import backgroundBooksImage from "../../assets/books_background.jpg";
+import {PAGINATION_STEP} from "../../utils/constants/constants";
+import {BookStorage} from "../../services/BookStorage/BookStorage";
 
 
-export const Header = ({ setAppState }) => {
+export const Header = ({ setAppState, requestFactory }) => {
   const [enteredSearchQuery, setEnteredSearchQuery] = useState('');
   const [category, setCategory] = useState('all');
   const [sorting, setSorting] = useState('relevance');
-
   const searchForBooks = (event) => {
-    event.preventDefault()
-    console.log('searched for' + enteredSearchQuery + ' in ' + category + ' sorted by ' + sorting);
-    setAppState('loading');
-    new Promise(resolve => setTimeout(resolve, 1000)).then(() => {
-      setAppState(Math.floor(Math.random() * 100))
-    } );
+    event.preventDefault();
+    setAppState({ state:'loading' });
+    requestFactory.create("simulate", PAGINATION_STEP, enteredSearchQuery, category, sorting)
+      .initialRequest()
+      .then(
+        (result) => {
+          BookStorage.clear();
+          let numberOfBooksDisplayed = result.numberOfBooksFound > PAGINATION_STEP ? PAGINATION_STEP : result.numberOfBooksFound;
+          setAppState({
+            state: String(result.numberOfBooksFound),
+            bookData: result.bookData,
+            numberOfBooksDisplayed: numberOfBooksDisplayed
+          });
+        },
+        (error) => {
+          //TODO: display error message in UI
+          console.log(error);
+          setAppState({ state: "initial" })
+        }
+      )
   }
 
   return (
