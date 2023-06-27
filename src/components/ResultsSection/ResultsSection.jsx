@@ -5,7 +5,7 @@ import { BookCard } from "../BookCard/BookCard";
 import { BookFactory } from "../../services/Book/Book";
 import {useState} from "react";
 import {PAGINATION_STEP} from "../../utils/constants/constants";
-import {BookStorage} from "../../services/BookStorage/BookStorage";
+import {bookStorage} from "../../services/BookStorage/BookStorage";
 
 
 export const ResultsSection = ({ appState, setAppState, requestFactory}) => {
@@ -21,16 +21,16 @@ export const ResultsSection = ({ appState, setAppState, requestFactory}) => {
       .paginationRequest()
       .then(
         (result) => {
-          setAppState({ 
-            state: appState.state, 
+          setAppState({
+            state: result.numberOfBooksFound,
             bookData: result.bookData,
-            numberOfBooksDisplayed: appState.numberOfBooksDisplayed + result.numberOfBooksLoaded
+            numberOfBooksDisplayed: appState.numberOfBooksDisplayed + result.numberOfBooksLoaded,
+            lastNumberOfBooksLoaded: result.numberOfBooksLoaded
           });
         },
         (error) => {
-          //TODO: display error message in UI
           console.log(error);
-          setAppState({ state: "initial" })
+          setAppState({ state: "error", error: error });
         }
       )
       .finally(
@@ -40,22 +40,23 @@ export const ResultsSection = ({ appState, setAppState, requestFactory}) => {
 
   switch (appState.state) {
     case 'initial':
+    case 'error':
       content = (
         <section className="App-search-results">
         </section>
       );
       break;
     case 'loading':
-      BookStorage.clear();
+      bookStorage.clear();
       for (let i = 0; i < appState.numberOfBooksDisplayed; i++) {
-        BookStorage.push("");
+        bookStorage.push("");
       }
       content = (
         <section className="App-search-results">
           <Container>
             <Row>
               {
-                BookStorage.books.map( (value, index) =>
+                bookStorage.books.map( (value, index) =>
                   <Col className='mb-3' xs={6} sm={4} lg={3} key={ "loading_book_" + index }>
                     <BookCard isLoaded={false}/>
                   </Col>
@@ -68,20 +69,20 @@ export const ResultsSection = ({ appState, setAppState, requestFactory}) => {
       break;
     default:
       if (!isLoadingMore)  {
-        console.log("adding new", appState.numberOfBooksDisplayed - PAGINATION_STEP, appState.numberOfBooksDisplayed);
-        for (let i = appState.numberOfBooksDisplayed - PAGINATION_STEP; i < appState.numberOfBooksDisplayed; i++) {
-          BookStorage.push(bookFactory.create("placeholder", +appState.state, appState.bookData));
+        for (let i = 0; i < appState.lastNumberOfBooksLoaded; i++) {
+          bookStorage.push(bookFactory.create("google", +appState.state, appState.bookData));
         }
+        console.log("BookStorage: ", bookStorage.books);
       }
-      console.log("BookStorage: ", BookStorage.books);
+
       content = (
         <section className="App-search-results">
           <Container>
             <Row>
               {
-                BookStorage.books.map( (thisCardBook, index) =>
+                bookStorage.books.map( (thisBook, index) =>
                   <Col className='mb-3' xs={6} sm={4} lg={3} key={ "loaded_book_"+index }>
-                    <BookCard isLoaded={true} thisBook={thisCardBook}/>
+                    <BookCard isLoaded={true} thisBook={thisBook}/>
                   </Col>
                 )
               }

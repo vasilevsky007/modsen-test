@@ -15,10 +15,12 @@ export function BookCard({isLoaded, thisBook}) {
           <Card style={{ width: '100%'}} onClick={showDetailed}>
             <Card.Img variant="top" src={thisBook.photo}/>
             <Card.Body>
-              <Card.Link href="#" className="text-muted">{thisBook.categories[0]}</Card.Link>
+              <Card.Link href="#" className="text-muted">
+                { typeof thisBook.categories === 'undefined' ? "" : thisBook.categories[0]}
+              </Card.Link>
               <Card.Title>{thisBook.bookName}</Card.Title>
               {
-                thisBook.authors.map(author =>
+                thisBook.authors?.map(author =>
                   <Card.Subtitle className="mb-2 text-muted" key={author}>{author}</Card.Subtitle>
                 )
               }

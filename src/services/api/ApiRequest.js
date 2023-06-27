@@ -1,5 +1,5 @@
 import {useRef} from "react";
-import {PAGINATION_STEP} from "../../utils/constants/constants";
+import {GOOGLE_API_KEY, GOOGLE_REQUEST_BODY, PAGINATION_STEP} from "../../utils/constants/constants";
 
 class SimulateRequest {
   numberOfBooksToLoad = 0;
@@ -36,34 +36,45 @@ class SimulateRequest {
 class GoogleApiRequest {
   numberOfBooksToLoad = 0;
   numberOfBooksLoaded = 0;
+  numberOfBooksFound = 0;
   enteredSearchQuery = "";
   category = "";
   sorting = "";
-  initialRequest(numberOfBooksToLoad, enteredSearchQuery, category, sorting ) {
-    this.numberOfBooksToLoad = numberOfBooksToLoad;
-    this.numberOfBooksLoaded = numberOfBooksToLoad;
-    this.enteredSearchQuery = enteredSearchQuery;
-    this.category = category;
-    this.sorting = sorting;
-    //TODO: implement google api fetch & decode json
-    return fetch("some request to google api using given fields")
-      .then(
+
+  constructor(numberOfBooksToLoad, enteredSearchQuery, category, sorting ) {
+    this.numberOfBooksToLoad = numberOfBooksToLoad ;
+    this.enteredSearchQuery = enteredSearchQuery ;
+    this.category = category ;
+    this.sorting = sorting ;
+  }
+
+  initialRequest() {
+    const maxResults = "&maxResults=" + this.numberOfBooksToLoad;
+    const orderBy  = "&orderBy=" + this.sorting;
+    const formattedQuery = this.enteredSearchQuery.replace(" ", "+");
+    return fetch(GOOGLE_REQUEST_BODY + formattedQuery
+      + maxResults + orderBy + GOOGLE_API_KEY).then(
         (response) => response.json(),
         () => {
           return new Promise((resolve , reject) => {
             reject(new Error("Невозможно установить соединение с сервером. Проверьте интернет подкючение и повторите повытку."))
           });
         }
-      )
-      .then(
+      ).then(
         (json) => {
           return new Promise((resolve, reject) => {
-            //trying to get needed data from json
-            //if (ALL OK) {
-            resolve({ numberOfBooksFound: "number of books found from google json",
-              bookData: "some book data from googlebook json" });
-            // else {
-            reject(Error("Ошибка при обработке ответа от Google Books API. Попоробуйте повторит запрос."));
+            if (typeof json?.totalItems === 'number') {
+              this.numberOfBooksFound = json?.totalItems;
+              this.numberOfBooksLoaded = json?.totalItems < this.numberOfBooksToLoad ?
+                json?.totalItems : this.numberOfBooksToLoad;
+              resolve({
+                numberOfBooksFound: json?.totalItems,
+                bookData: json?.items ,
+                numberOfBooksLoaded: this.numberOfBooksLoaded
+              });
+            } else {
+              reject(Error("Ошибка при обработке ответа от Google Books API. Попоробуйте повторить запрос."));
+            }
           });
         },
         (error) => {
@@ -73,7 +84,43 @@ class GoogleApiRequest {
         }
       )
   }
-
+  paginationRequest() {
+    const maxResults = "&maxResults=" + this.numberOfBooksToLoad;
+    const startIndex = "&startIndex=" + this.numberOfBooksLoaded;
+    const orderBy  = "&orderBy=" + this.sorting;
+    const formattedQuery = this.enteredSearchQuery.replace(" ", "+");
+    return fetch(GOOGLE_REQUEST_BODY + formattedQuery
+      + startIndex + maxResults + orderBy + GOOGLE_API_KEY).then(
+      (response) => response.json(),
+      () => {
+        return new Promise((resolve , reject) => {
+          reject(new Error("Невозможно установить соединение с сервером. Проверьте интернет подкючение и повторите повытку."))
+        });
+      }
+    ).then(
+      (json) => {
+        return new Promise((resolve, reject) => {
+          if (typeof json?.totalItems === 'number' && Array.isArray(json?.items)) {
+            this.numberOfBooksFound = json?.totalItems;
+            this.numberOfBooksLoaded = json?.totalItems < this.numberOfBooksToLoad ?
+              json?.totalItems : this.numberOfBooksToLoad;
+            resolve({
+              numberOfBooksFound: json?.totalItems,
+              bookData: json?.items,
+              numberOfBooksLoaded: this.numberOfBooksLoaded
+            });
+          } else {
+            reject(Error("Ошибка при обработке ответа от Google Books API. Попоробуйте повторить запрос."));
+          }
+        });
+      },
+      (error) => {
+        return new Promise((resolve, reject) => {
+          reject(error);
+        })
+      }
+    )
+  }
 }
 
 export class RequestFactory {

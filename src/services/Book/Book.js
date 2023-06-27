@@ -1,7 +1,7 @@
-import bookImage from '../../assets/book.png'
+import bookImage from '../../assets/book.jpg'
 
 class PlaceholderBook {
-  constructor(data) {
+  constructor(index, data) {
     console.log("placeholder book constructor working with data: ", data);
     this.photo = bookImage;
     this.bookName = 'BookName';
@@ -11,9 +11,18 @@ class PlaceholderBook {
   }
 }
 class GoogleBook {
-  constructor(data) {
-    //TODO: implement constructor for googlebooks api
-    console.log("google book constructor working with data: ", data);
+  constructor(index, data) {
+    let bookInfo;
+    if (typeof data[index]?.volumeInfo === "undefined") {
+      return undefined;
+    } else {
+      bookInfo = data[index]?.volumeInfo;
+    }
+    this.photo = typeof bookInfo?.imageLinks?.thumbnail === 'undefined' ? bookImage : bookInfo?.imageLinks?.thumbnail;
+    this.bookName = bookInfo?.title;
+    this.categories = bookInfo?.categories;
+    this.authors = bookInfo?.authors;
+    this.bookDescription = bookInfo?.description;
   }
 }
 export class BookFactory {
@@ -24,9 +33,11 @@ export class BookFactory {
 
   numberOfBooksCreated = 0
 
-  create(type, numberOfBooksInData, ...data) {
+  create(type, numberOfBooksInData, data) {
     const Book = BookFactory.bookTypes[type] || BookFactory.bookTypes.placeholder;
+    const result = this.numberOfBooksCreated < numberOfBooksInData ?
+      new Book(this.numberOfBooksCreated, data) : undefined;
     this.numberOfBooksCreated++;
-    return this.numberOfBooksCreated <= numberOfBooksInData ? new Book(data) : undefined;
+    return result;
   }
 }

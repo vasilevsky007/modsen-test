@@ -18,13 +18,13 @@ export const BookDetailed = ({isShown, setShown, book}) => {
             </Col>
             <Col xs = {12} sm = {6}>
               {
-                book?.categories.map( category =>
+                book?.categories?.map( category =>
                   <Button variant="link"  href="#" className="text-muted" key={category}>{category}</Button>
                 )
               }
               <Card.Title>{book?.bookName}</Card.Title>
               {
-                book?.authors.map( author =>
+                book?.authors?.map( author =>
                   <Card.Subtitle className="mb-2 text-muted" key={author}>{author}</Card.Subtitle>
                 )
               }

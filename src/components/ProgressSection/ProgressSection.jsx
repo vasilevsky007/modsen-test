@@ -21,7 +21,30 @@ export const ProgressSection = ({ appState }) => {
           <Spinner/>
         </section>;
       break;
-      default:
+    case 'error':
+      content =
+        <section className="App-ProgressSection m-2">
+          <Container>
+            <Alert variant="danger">
+              <Alert.Heading>
+                An error occurred
+              </Alert.Heading>
+              {appState.error.message}
+            </Alert>
+          </Container>
+        </section>;
+      break;
+    case 0:
+      content =
+        <section className="App-ProgressSection m-2">
+          <Container>
+            <Alert variant="warning">
+              No results found.
+            </Alert>
+          </Container>
+        </section>;
+      break;
+    default:
       content =
         <section className="App-ProgressSection m-2">
           <Container>

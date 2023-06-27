@@ -5,7 +5,7 @@ import {Button, Col, Container, Form, InputGroup, Row} from "react-bootstrap";
 import './styles.css'
 import backgroundBooksImage from "../../assets/books_background.jpg";
 import {PAGINATION_STEP} from "../../utils/constants/constants";
-import {BookStorage} from "../../services/BookStorage/BookStorage";
+import {bookStorage} from "../../services/BookStorage/BookStorage";
 
 
 export const Header = ({ setAppState, requestFactory }) => {
@@ -15,22 +15,22 @@ export const Header = ({ setAppState, requestFactory }) => {
   const searchForBooks = (event) => {
     event.preventDefault();
     setAppState({ state:'loading' });
-    requestFactory.create("simulate", PAGINATION_STEP, enteredSearchQuery, category, sorting)
+    requestFactory.create("google", PAGINATION_STEP, enteredSearchQuery, category, sorting)
       .initialRequest()
       .then(
         (result) => {
-          BookStorage.clear();
+          bookStorage.clear();
           let numberOfBooksDisplayed = result.numberOfBooksFound > PAGINATION_STEP ? PAGINATION_STEP : result.numberOfBooksFound;
           setAppState({
-            state: String(result.numberOfBooksFound),
+            state: result.numberOfBooksFound,
             bookData: result.bookData,
-            numberOfBooksDisplayed: numberOfBooksDisplayed
+            numberOfBooksDisplayed: numberOfBooksDisplayed,
+            lastNumberOfBooksLoaded: result.numberOfBooksLoaded
           });
         },
         (error) => {
-          //TODO: display error message in UI
           console.log(error);
-          setAppState({ state: "initial" })
+          setAppState({ state: "error", error: error });
         }
       )
   }

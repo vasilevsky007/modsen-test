@@ -1,5 +1,5 @@
 
-export const BookStorage = {
+export const bookStorage = {
   books : [],
   get(index) {
     return this.books.at(index);
