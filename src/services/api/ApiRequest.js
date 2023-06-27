@@ -17,7 +17,7 @@ class SimulateRequest {
   }
   initialRequest() {
     console.log('searched for' + this.enteredSearchQuery + ' in ' + this.category + ' sorted by ' + this.sorting);
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       this.numberOfBooksFound = Math.floor(Math.random() * 100);
       setTimeout(() => resolve({ numberOfBooksFound: this.numberOfBooksFound, bookData: "simulate initialRequest data" }), 1000 );
     });
@@ -27,7 +27,7 @@ class SimulateRequest {
     const paginationBooksNumber = this.numberOfBooksFound - this.numberOfBooksLoaded < PAGINATION_STEP ? this.numberOfBooksFound - this.numberOfBooksLoaded : PAGINATION_STEP;
     console.log('pagination for' + this.enteredSearchQuery + ' in category ' + this.category + ' sorted by ' + this.sorting + paginationBooksNumber + ' items from start index ' + this.numberOfBooksLoaded );
     this.numberOfBooksLoaded += paginationBooksNumber;
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       setTimeout(() => resolve( { numberOfBooksLoaded: this.numberOfBooksLoaded, bookData: "simulate pagination request data"} ), 1000)
     })
   }
