@@ -4,7 +4,6 @@ import { BookCard } from "../BookCard/BookCard";
 
 import { BookFactory } from "../../services/Book/Book";
 import {useState} from "react";
-import {PAGINATION_STEP} from "../../utils/constants/constants";
 import {bookStorage} from "../../services/BookStorage/BookStorage";
 
 
