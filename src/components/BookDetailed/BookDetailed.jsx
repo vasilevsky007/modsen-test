@@ -1,5 +1,5 @@
 import { Button, Card, Col, Container, Image, Modal, Row } from "react-bootstrap";
-
+import './styles.css'
 export const BookDetailed = ({isShown, setShown, book}) => {
   return (
     <Modal

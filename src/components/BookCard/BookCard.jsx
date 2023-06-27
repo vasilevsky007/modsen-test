@@ -12,9 +12,9 @@ export function BookCard({isLoaded, thisBook}) {
     <>
       {isLoaded ? (
         <>
-          <Card style={{ width: '100%'}} onClick={showDetailed}>
+          <Card style={{ width: '100%', height: '100%'}} onClick={showDetailed}>
             <Card.Img variant="top" src={thisBook.photo}/>
-            <Card.Body>
+            <Card.Body className="d-flex flex-column-reverse">
               <Card.Link href="#" className="text-muted">
                 { typeof thisBook.categories === 'undefined' ? "" : thisBook.categories[0]}
               </Card.Link>
