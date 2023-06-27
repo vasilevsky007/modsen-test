@@ -7,3 +7,7 @@
 .selector-label {
   margin-top: 0.5rem;
 }
+
+.was-validated .form-control:valid, .form-control.is-valid, .was-validated .form-select:valid:not([multiple]):not([size]) {
+  background: white;
+}

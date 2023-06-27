@@ -12,27 +12,36 @@ export const Header = ({ setAppState, requestFactory }) => {
   const [enteredSearchQuery, setEnteredSearchQuery] = useState('');
   const [category, setCategory] = useState('all');
   const [sorting, setSorting] = useState('relevance');
+  const [validated, setValidated] = useState(false);
   const searchForBooks = (event) => {
     event.preventDefault();
-    setAppState({ state:'loading' });
-    requestFactory.create("google", PAGINATION_STEP, enteredSearchQuery, category, sorting)
-      .initialRequest()
-      .then(
-        (result) => {
-          bookStorage.clear();
-          let numberOfBooksDisplayed = result.numberOfBooksFound > PAGINATION_STEP ? PAGINATION_STEP : result.numberOfBooksFound;
-          setAppState({
-            state: result.numberOfBooksFound,
-            bookData: result.bookData,
-            numberOfBooksDisplayed: numberOfBooksDisplayed,
-            lastNumberOfBooksLoaded: result.numberOfBooksLoaded
-          });
-        },
-        (error) => {
-          console.log(error);
-          setAppState({ state: "error", error: error });
-        }
-      )
+    const form = event.currentTarget;
+    if (form.checkValidity() === true) {
+      setAppState({ state:'loading' });
+      requestFactory.create("google", PAGINATION_STEP, enteredSearchQuery, category, sorting)
+        .initialRequest()
+        .then(
+          (result) => {
+            bookStorage.clear();
+            let numberOfBooksDisplayed = result.numberOfBooksFound > PAGINATION_STEP ? PAGINATION_STEP : result.numberOfBooksFound;
+            setAppState({
+              state: result.numberOfBooksFound,
+              bookData: result.bookData,
+              numberOfBooksDisplayed: numberOfBooksDisplayed,
+              lastNumberOfBooksLoaded: result.numberOfBooksLoaded
+            });
+          },
+          (error) => {
+            console.log(error);
+            setAppState({ state: "error", error: error });
+          }
+        )
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    setValidated(true);
+
+
   }
 
   return (
@@ -47,7 +56,7 @@ export const Header = ({ setAppState, requestFactory }) => {
             <h1 className="header-text mt-5 mb-5">Search for books</h1>
           </Col>
         </Row>
-        <Form className="search-form" onSubmit={ searchForBooks }>
+        <Form noValidate validated={validated} className="search-form" onSubmit={ searchForBooks }>
           <Row>
             <Col>
               <InputGroup className="mb-3">
@@ -55,7 +64,11 @@ export const Header = ({ setAppState, requestFactory }) => {
                   placeholder="Enter the book name"
                   aria-label="Enter the book name"
                   onChange={ event => setEnteredSearchQuery(event.target.value) }
+                  required
                 />
+                <Form.Control.Feedback type="invalid" tooltip>
+                  No empty searches
+                </Form.Control.Feedback>
                 <Button as="input" type="submit" value="Search" variant="outline-light" size="lg"/>
               </InputGroup>
             </Col>
