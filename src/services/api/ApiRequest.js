@@ -49,10 +49,11 @@ class GoogleApiRequest {
   }
 
   initialRequest() {
+    const subject = this.category === "all" ? "" : "+subject:" + this.category;
     const maxResults = "&maxResults=" + this.numberOfBooksToLoad;
     const orderBy  = "&orderBy=" + this.sorting;
     const formattedQuery = this.enteredSearchQuery.replace(" ", "+");
-    return fetch(GOOGLE_REQUEST_BODY + formattedQuery
+    return fetch(GOOGLE_REQUEST_BODY + formattedQuery + subject
       + maxResults + orderBy + GOOGLE_API_KEY).then(
         (response) => response.json(),
         () => {
@@ -85,11 +86,12 @@ class GoogleApiRequest {
       )
   }
   paginationRequest() {
+    const subject = this.category === "all" ? "" : "+subject:" + this.category;
     const maxResults = "&maxResults=" + this.numberOfBooksToLoad;
     const startIndex = "&startIndex=" + this.numberOfBooksLoaded;
     const orderBy  = "&orderBy=" + this.sorting;
     const formattedQuery = this.enteredSearchQuery.replace(" ", "+");
-    return fetch(GOOGLE_REQUEST_BODY + formattedQuery
+    return fetch(GOOGLE_REQUEST_BODY + formattedQuery + subject
       + startIndex + maxResults + orderBy + GOOGLE_API_KEY).then(
       (response) => response.json(),
       () => {
