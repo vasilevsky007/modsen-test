@@ -5,6 +5,7 @@ import { BookCard } from "../BookCard/BookCard";
 import { BookFactory } from "../../services/Book/Book";
 import {useState} from "react";
 import {bookStorage} from "../../services/BookStorage/BookStorage";
+import {PAGINATION_STEP} from "../../utils/constants/constants";
 
 
 export const ResultsSection = ({ appState, setAppState, requestFactory}) => {
@@ -47,7 +48,7 @@ export const ResultsSection = ({ appState, setAppState, requestFactory}) => {
       break;
     case 'loading':
       bookStorage.clear();
-      for (let i = 0; i < appState.numberOfBooksDisplayed; i++) {
+      for (let i = 0; i < PAGINATION_STEP; i++) {
         bookStorage.push("");
       }
       content = (

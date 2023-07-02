@@ -1,6 +1,12 @@
-import { Button, Card, Col, Container, Image, Modal, Row } from "react-bootstrap";
+import {Button, Card, Col, Collapse, Container, Image, Modal, Ratio, Row, Spinner} from "react-bootstrap";
 import './styles.css'
+import {useState} from "react";
 export const BookDetailed = ({isShown, setShown, book}) => {
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  const onImageLoad = () => {
+    setImageLoaded(true);
+  }
   return (
     <Modal
       show={isShown}
@@ -14,7 +20,17 @@ export const BookDetailed = ({isShown, setShown, book}) => {
         <Container>
           <Row>
             <Col xs = {12} sm = {6}>
-              <Image src={book?.photo} fluid/>
+              <Collapse in={imageLoaded}>
+                <Image src={book?.photo} onLoad={onImageLoad} fluid/>
+              </Collapse>
+              <Collapse in={!imageLoaded}>
+                <Ratio aspectRatio={125}>
+                  <Container fluid={true} className="d-flex align-items-center justify-content-center">
+                    <Spinner animation="border" variant="secondary"/>
+                  </Container>
+                </Ratio>
+              </Collapse>
+
             </Col>
             <Col xs = {12} sm = {6}>
               {
@@ -30,7 +46,7 @@ export const BookDetailed = ({isShown, setShown, book}) => {
               }
               <Card>
                 <Card.Body>
-                  {book?.bookDescription}
+                  {typeof book?.bookDescription === 'undefined' ? "There is no description for this book..." : book?.bookDescription}
                 </Card.Body>
               </Card>
             </Col>
